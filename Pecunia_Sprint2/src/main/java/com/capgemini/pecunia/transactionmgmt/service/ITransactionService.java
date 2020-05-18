@@ -5,22 +5,18 @@ import com.capgemini.pecunia.transactionmgmt.entities.Cheque;
 import com.capgemini.pecunia.transactionmgmt.entities.Transaction;
 
 public interface ITransactionService {
-	public double getBalance(Account account);
+	 double getBalance(Account account);
 
-	public boolean updateBalance(Account account, double balance);
+	 boolean updateBalance(Account account, double balance);
 
-	public Account getAccountById(String accNumber);
+	 Account getAccountById(String accNumber);
 
-	public int creditUsingSlip(Transaction transaction);
+	 int creditUsingSlip(Transaction transaction);
 
-	public int debitUsingSlip(Transaction transaction);
+	 int debitUsingSlip(Transaction transaction);
 
-	public int creditUsingCheque(Transaction transaction, Cheque cheque);
+	 int creditUsingCheque(Transaction transaction, Cheque cheque);
 
-	public int debitUsingCheque(Transaction transaction, Cheque cheque);
-	
-	public String generateTransactionId(Transaction transaction);
-	
-	public String generateChequeId(Cheque cheque);
+	 int debitUsingCheque(Transaction transaction, Cheque cheque);
 
 }

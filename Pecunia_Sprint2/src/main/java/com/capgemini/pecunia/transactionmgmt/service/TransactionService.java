@@ -1,9 +1,11 @@
 package com.capgemini.pecunia.transactionmgmt.service;
 
+import java.util.Date;
 import java.util.Optional;
 
 import javax.transaction.Transactional;
 
+import com.capgemini.pecunia.accountmgmt.util.AccountUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -14,7 +16,6 @@ import com.capgemini.pecunia.transactionmgmt.dao.TransactionDao;
 import com.capgemini.pecunia.transactionmgmt.entities.Cheque;
 import com.capgemini.pecunia.transactionmgmt.entities.Transaction;
 import com.capgemini.pecunia.transactionmgmt.exception.AccountNotFoundException;
-import com.capgemini.pecunia.transactionmgmt.exception.IncorrectSlipDetailsException;
 import com.capgemini.pecunia.transactionmgmt.exception.InvalidTransactionAmountException;
 import com.capgemini.pecunia.transactionmgmt.util.TransactionUtil;
 
@@ -22,100 +23,103 @@ import com.capgemini.pecunia.transactionmgmt.util.TransactionUtil;
 @Service
 @Transactional
 public class TransactionService implements ITransactionService {
-	
-	@Autowired
-	IAccountDao accountDao;
-	@Autowired
-	TransactionUtil util;
-	@Autowired
-	TransactionDao transactionDao;
-	@Autowired 
-	ChequeDao chequeDao;
 
-	@Override
-	public double getBalance(Account account) {
-		return account.getAccountBalance();
-	}
+    @Autowired
+    private IAccountDao accountDao;
+    @Autowired
+    private TransactionDao transactionDao;
+    @Autowired
+    private ChequeDao chequeDao;
 
-	@Override
-	public boolean updateBalance(Account account, double balance) {
-		account.setAccountBalance(balance);
-		return true;
-	}
+    @Override
+    public double getBalance(Account account) {
+        return account.getAccountBalance();
+    }
 
-	@Override
-	public Account getAccountById(String accNumber) {
-		Optional<Account> optional=accountDao.findById(accNumber);
-		if(optional.isPresent())
-		{
-			Account account=optional.get();
-			return account;
-		}
-		throw new AccountNotFoundException("Account not exist for "+ accNumber);
-	}
+    @Override
+    public boolean updateBalance(Account account, double balance) {
+        account.setAccountBalance(balance);
+        return true;
+    }
 
-	@Override
-	public int creditUsingSlip(Transaction transaction) {
-		String transId=util.generateId(6);
-		transaction.setTransId(transId);
-		if(util.validateCreditSlip(transaction)) {
-			Account account=getAccountById(transaction.getTransAccountId());
-			account.setAccountBalance(account.getAccountBalance()+transaction.getTransAmount());
-			accountDao.save(account);
-			transactionDao.save(transaction);
-			return 1;
-		}
-		else {
-			return 0;
-		}
-		
-	}
+    @Override
+    public Account getAccountById(String accNumber) {
+        Optional<Account> optional = accountDao.findById(accNumber);
+        if (optional.isPresent()) {
+            Account account = optional.get();
+            return account;
+        }
+        throw new AccountNotFoundException("Account not exist for " + accNumber);
+    }
 
-	@Override
+    @Override
+    public int creditUsingSlip(Transaction transaction) {
+        String transId = AccountUtil.generateId("", 6);
+        transaction.setTransId(transId);
+        if (TransactionUtil.validateCreditSlip(transaction)) {
+            Account account = getAccountById(transaction.getTransAccountId());
+            account.setAccountBalance(account.getAccountBalance() + transaction.getTransAmount());
+            transaction.setOption("credit-slip");
+            transaction.setTransType("credit");
+            accountDao.save(account);
+            transactionDao.save(transaction);
+            return 1;
+        }
+        return 0;
+
+
+    }
+
+    @Override
 	public int debitUsingSlip(Transaction transaction) {
-		String transId=util.generateId(6);
+		String transId=AccountUtil.generateId("", 6);
 		transaction.setTransId(transId);
-		if(util.validateDebitSlip(transaction)) {
+		if(TransactionUtil.validateDebitSlip(transaction)) {
 			Account account=getAccountById(transaction.getTransAccountId());
 			if(transaction.getTransAmount()>account.getAccountBalance()) {
 				throw new InvalidTransactionAmountException("Transaction is not possible");}
 			account.setAccountBalance(account.getAccountBalance()-transaction.getTransAmount());
+			transaction.setOption("debit-slip");
+            transaction.setTransType("debit");
 			accountDao.save(account);
 			transactionDao.save(transaction);
 			return 1;
 		}
-		else {
+		
 			return 0;
 		}
 		
-	}
+	
 
-	@Override
-	public int creditUsingCheque(Transaction transaction, Cheque cheque) {
-		String transId=util.generateId(6);
-		transaction.setTransId(transId);
-		String chequeId=util.generateId(6);
-		cheque.setChequeId(chequeId);
-		if(util.validateCheque(cheque, transaction)) {
-			Account account=getAccountById(transaction.getTransAccountId());
-			account.setAccountBalance(account.getAccountBalance()+transaction.getTransAmount());
-			accountDao.save(account);
-			chequeDao.save(cheque);
-			transactionDao.save(transaction);
-			return 1;
-		}
-		else {
-			return 0;
-		}
-	}
+    @Override
+    public int creditUsingCheque(Transaction transaction, Cheque cheque) {
+        String transId = AccountUtil.generateId("", 6);
+        transaction.setTransId(transId);
+        String chequeId = AccountUtil.generateId("", 6);
+        cheque.setChequeId(chequeId);
+        transaction.setOption("credit-cheque");
+        transaction.setTransType("credit");
+        transaction.setTransDate(new Date());
+        if (TransactionUtil.validateCheque(cheque, transaction)) {
+            Account account = getAccountById(transaction.getTransAccountId());
+            account.setAccountBalance(account.getAccountBalance() + transaction.getTransAmount());
+            accountDao.save(account);
+            chequeDao.save(cheque);
+            transactionDao.save(transaction);
+            return 1;
+        }
+        return 0;
+    }
 
-	@Override
+    @Override
 	public int debitUsingCheque(Transaction transaction, Cheque cheque) {
-		String transId=util.generateId(6);
+		String transId=AccountUtil.generateId("", 6);
 		transaction.setTransId(transId);
-		String chequeId=util.generateId(6);
+		String chequeId=AccountUtil.generateId("", 6);
 		cheque.setChequeId(chequeId);
-		if(util.validateCheque(cheque, transaction)) {
+		transaction.setOption("debit-cheque");
+        transaction.setTransType("debit");
+		if(TransactionUtil.validateCheque(cheque, transaction)) {
 			Account account=getAccountById(transaction.getTransAccountId());
 			if(transaction.getTransAmount()>account.getAccountBalance() ) {
 		      throw new InvalidTransactionAmountException("Transaction is not possible"); }
@@ -125,21 +129,7 @@ public class TransactionService implements ITransactionService {
 			transactionDao.save(transaction);
 			return 1;
 		}
-		else {
 			return 0;
 		}
-	}
-
-	@Override
-	public String generateTransactionId(Transaction transaction) {
-		String transId=util.generateId(6);
-		return transId;
-	}
-
-	@Override
-	public String generateChequeId(Cheque cheque) {
-		String chequeId=util.generateId(6);
-		return chequeId;
-	}
 
 }
