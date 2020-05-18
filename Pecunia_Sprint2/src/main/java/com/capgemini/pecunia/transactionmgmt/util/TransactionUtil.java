@@ -102,25 +102,25 @@ public class TransactionUtil {
         }
 
         if (cheque.getChequeBankName() == null || cheque.getChequeBankName().isEmpty()) {
-            throw new ChequeBouncedException("Cheque details are Incomplete");
+            throw new IncorrectChequeDetailsException("Cheque details are Incomplete");
         }
 
         String chequenum = String.valueOf(cheque.getChequeNum());
-        System.out.println("inside validatecreditcheque");
+       
         if (cheque.getChequeAccountNum().length() != 12) {
-            throw new ChequeBouncedException("Cheque Account Number is incorrect");
+            throw new InvalidChequeException("Cheque Account Number is incorrect");
         }
         System.out.println("Transaction Amount " + transaction.getTransAmount());
         if (!(transaction.getTransAmount() >= 100 && transaction.getTransAmount() <= 200000)) {
-            throw new ChequeBouncedException("Transaction Amount is not in limit");
+            throw new InvalidTransactionAmountException("Transaction Amount is not in limit");
         }
         if (chequenum.length() != 6) {
-            throw new ChequeBouncedException("Cheque Number length is incorrect ");
+            throw new InvalidChequeLengthException("Cheque Number length is incorrect ");
         }
 
         if (!(cheque.getChequeIFSC().length() == 10) && (cheque.getChequeIFSC().matches("\\w+"))) {
 
-            throw new ChequeBouncedException("Invalid IFSC");
+            throw new InvalidChequeIFSCException("Invalid IFSC");
 
 
         }
