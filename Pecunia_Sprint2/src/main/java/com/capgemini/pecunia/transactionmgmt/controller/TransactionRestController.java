@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.*;
 
 import com.capgemini.pecunia.transactionmgmt.entities.Cheque;
 import com.capgemini.pecunia.transactionmgmt.entities.Transaction;
-import com.capgemini.pecunia.transactionmgmt.service.TransactionService;
+import com.capgemini.pecunia.transactionmgmt.service.TransactionServiceImpl;
 import com.capgemini.pecunia.transactionmgmt.util.TransactionUtil;
 
 @RequestMapping("/transactions")
@@ -21,7 +21,7 @@ public class TransactionRestController {
     private static final Logger Log = LoggerFactory.getLogger(TransactionRestController.class);
 
     @Autowired
-    private TransactionService service;
+    private TransactionServiceImpl service;
 
     @PostMapping("/credit/slip")
     public ResponseEntity<String> creditUsingSlip(@RequestBody Map<String, Object> request) {

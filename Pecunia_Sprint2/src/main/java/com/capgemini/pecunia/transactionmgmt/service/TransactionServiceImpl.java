@@ -22,7 +22,7 @@ import com.capgemini.pecunia.transactionmgmt.util.TransactionUtil;
 
 @Service
 @Transactional
-public class TransactionService implements ITransactionService {
+public class TransactionServiceImpl implements ITransactionService {
 
     @Autowired
     private IAccountDao accountDao;
