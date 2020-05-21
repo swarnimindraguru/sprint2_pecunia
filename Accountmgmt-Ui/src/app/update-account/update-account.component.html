@@ -1,0 +1,42 @@
+<h1 style="margin-left: 40%;">Update Account</h1>
+<div class="jumbotron">
+    <form #updateForm="ngForm" (ngSubmit)="updateAccount(updateForm)">
+        <div class="form-group row">
+            <label for="accountNumber" class="col-sm-2 col-form-label">Account Number</label>
+            <div class="col-sm-3 col-form-label">
+              <input type="text" class="form-control" #accountNumber="ngModel" id="accountNumber" name="accountNumber"  ngModel required>
+              <small id="accountNumber" class="form-text text-muted">Please Don't enter any special character like $,*;@,etc..,</small>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="customerName" class="col-sm-2 col-form-label">New Customer Name</label>
+            <div class="col-sm-3 col-form-label">
+                <input type="text" class="form-control" #customerName="ngModel" id="customerName" name="customerName" ngModel required>
+                <small id="customerName" class="form-text text-muted">Please Don't enter any special character and number like $,*;@,1,3</small>
+            </div>
+        </div>
+        <button [disabled]="updateForm.form.invalid" class="btn btn-primary">Update Account</button>
+    </form>
+</div>
+<hr>
+<h1 style="margin-left: 40%;">Update Contact Number</h1>
+<div class="jumbotron">
+    <form #updateContact="ngForm" (ngSubmit)="updateCustomerContact(updateContact)">
+        <div class="form-group row">
+            <label for="accountNumber" class="col-sm-2 col-form-label">Account Number</label>
+            <div class="col-sm-3 col-form-label">
+              <input type="text" class="form-control" #accountNumber="ngModel" id="accountNumber" name="accountNumber"  ngModel required>
+              <small id="accountNumber" class="form-text text-muted">Please Don't enter any special character like $,*;@,etc..,</small>
+            </div>
+        </div>
+        <div class="form-group row">
+            <label for="customerContact" class="col-sm-2 col-form-label">New Customer Contact</label>
+            <div class="col-sm-3 col-form-label">
+                <input type="text" class="form-control" #customerContact="ngModel" id="customerContact" name="customerContact" ngModel required>
+                <small id="customerContact" class="form-text text-muted">Please Don't enter any special character and number like $,*;@,1,3</small>
+            </div>
+        </div>
+        <button [disabled]="updateContact.form.invalid" class="btn btn-primary">Update Account</button>
+    </form>
+</div>
+{{msg}}

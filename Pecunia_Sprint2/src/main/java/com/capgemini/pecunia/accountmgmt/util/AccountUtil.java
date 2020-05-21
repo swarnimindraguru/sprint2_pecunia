@@ -1,10 +1,11 @@
 package com.capgemini.pecunia.accountmgmt.util;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.Date;
-import java.util.Map;
-import java.util.Random;
+import java.util.*;
 
 import com.capgemini.pecunia.accountmgmt.dto.AccountDetails;
 import com.capgemini.pecunia.accountmgmt.entities.Account;
@@ -12,12 +13,7 @@ import com.capgemini.pecunia.accountmgmt.entities.Address;
 import com.capgemini.pecunia.accountmgmt.entities.Customer;
 
 public class AccountUtil {
-    private static final DateTimeFormatter formatter=DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
-	/**
-	 * @param account This method will generate random id according to the length passed           
-	 * @return id
-	 */
 	public static String generateId(String prefix,int length) {
 		StringBuilder id = new StringBuilder(prefix);
 		for (int i = 0; i < length; i++) {
@@ -32,20 +28,19 @@ public class AccountUtil {
 		Account account = new Account();
 		double accountBalance = (double) request.get("accountBalance");
 		account.setAccountBalance(accountBalance);
-		String accountBranchId = (String) request.get("branchId");
+		String accountBranchId = (String) request.get("accountBranchId");
 		account.setAccountBranchId(accountBranchId);
 		String accountType = (String) request.get("accountType");
 		account.setAccountType(accountType);
 		double accountInterest = (double) request.get("accountInterest");
 		account.setAccountInterest(accountInterest);
-		Date lastUpdated = (Date) request.get("lastUpdate");
-		account.setLastUpdated(lastUpdated);
 		return account;
 		
 	}
 
 	public static AccountDetails convertToDetails(Account account){
 		Customer customer=account.getCustomer();
+		Address address=account.getAddress();
 		AccountDetails details=new AccountDetails();
         details.setAccountId(account.getAccountId());
         details.setAccountBalance(account.getAccountBalance());
@@ -57,18 +52,29 @@ public class AccountUtil {
         details.setAccountType(account.getAccountType());
         details.setCustomerId(customer.getCustomerId());
         details.setCustomerName(customer.getCustomerName());
-        details.setLastUpdated(account.getLastUpdated());
+        details.setCustomerContact(customer.getCustomerContact());
+        details.setCustomerAddress(customer.getCustomerAddress());
+        Date lastUpdated=account.getLastUpdated();
+		String formatted=DateUtil.toString(lastUpdated,"yyyy-MM-dd hh:mm");
+        details.setLastUpdated(formatted);
 		return details;
+	}
+
+	public static List<AccountDetails>convertToDetails(List<Account>list){
+		List<AccountDetails>desired=new ArrayList<>();
+		for (Account account:list){
+		   AccountDetails details=convertToDetails(account);
+			desired.add(details);
+		}
+		return desired;
 	}
 	
 	public static Customer convertToCustomer(Map<String,Object> request) {
 		Customer customer = new Customer();
 		String customerName = (String) request.get("customerName");
 		customer.setCustomerName(customerName);
-		//Date customerDob = (Date) request.get("customerDob");
 		String customerDobText=(String) request.get("customerDob");
-		LocalDate customerDobLocal=LocalDate.parse(customerDobText,formatter);
-	    Date date=new Date(customerDobLocal.getYear(),customerDobLocal.getMonthValue(),customerDobLocal.getDayOfMonth());
+		Date date=DateUtil.toDate("dd-MM-yy",customerDobText);
 		customer.setCustomerDob(date);
 		String customerGender = (String) request.get("customerGender");
 		customer.setCustomerGender(customerGender);
@@ -85,13 +91,13 @@ public class AccountUtil {
 		Address address = new Address();
 		String addressLine = (String) request.get("addressLine");
 		address.setAddressLine(addressLine);
-		String addressCity = (String) request.get("city");
+		String addressCity = (String) request.get("addressCity");
 		address.setAddressCity(addressCity);
-		String addressState = (String) request.get("state");
+		String addressState = (String) request.get("addressState");
 		address.setAddressState(addressState);
-		String addressCountry = (String) request.get("country");
+		String addressCountry = (String) request.get("addressCountry");
 		address.setAddressCountry(addressCountry);
-		String addressZipcode = (String) request.get("zipcode");
+		String addressZipcode = (String) request.get("addressZipcode");
 		address.setAddressZipcode(addressZipcode);
 		return address;
 	}

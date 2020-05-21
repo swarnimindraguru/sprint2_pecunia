@@ -117,7 +117,7 @@ public class Account {
     @Override
     public boolean equals(Object object) {
         if (this == object) return true;
-        if (object == null || !(object instanceof Account)) return false;
+        if (object == null || !(object.getClass().equals(Account.class))) return false;
         Account account = (Account) object;
         return this.accountId.equals(account.getAccountId());
     }

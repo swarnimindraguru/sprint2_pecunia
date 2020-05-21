@@ -63,12 +63,12 @@ public class AccountServiceImplementation implements IAccountService {
 		String accountId = AccountUtil.generateId("",12);
 		account.setAccountId(accountId);
 		account.setCustomer(customer);
-        account.setAccountStatus("active");
-        account.setAccountHolderId(customerId);
-        account.setCustomer(customer);
-        account.setLastUpdated(new Date());
+                account.setAccountStatus("active");
+                account.setAccountHolderId(customerId);
+                account.setCustomer(customer);
+                account.setLastUpdated(new Date());
 		account=accountDao.save(account);
-		return accountId;
+		return "Account addedd succsessfully account id:" +accountId ;
 	}
 
 	/**
@@ -93,27 +93,6 @@ public class AccountServiceImplementation implements IAccountService {
 			return account;
 		}
 		throw new AccountNotFoundException("account not found for id=" + accountId);
-	}
-
-	@Override
-	public Customer findByCustomerId(String customerId) {
-		Optional<Customer> optional = customerDao.findById(customerId);
-		if (optional.isPresent()) {
-			Customer customer = optional.get();
-			return customer;
-		}
-		throw new CustomerNotFoundException("customer not found for id=" + customerId);
-	}
-
-	/**
-	 * This method will return list of all account
-	 *
-	 * @return List of accounts
-	 */
-	@Override
-	public List<Account> fetchAllAccounts() {
-		List<Account> list = accountDao.findAll();
-		return list;
 	}
 
 	/**
@@ -156,21 +135,4 @@ public class AccountServiceImplementation implements IAccountService {
 		}
 		return "Update Unsuccessful";
 	}
-
-	/**
-	 * This method will update the customer address
-	 *
-	 * @return
-	 */
-	@Override
-	public String updateCustomerAddress(Account account, Address address) {
-		boolean exists = accountDao.existsById(account.getAccountId());
-		if (exists) {
-			address = addressDao.save(address);
-			return "Customer address added successfully";
-		}
-		return "Update Unsuccessful";
-	}
-
-	
 }

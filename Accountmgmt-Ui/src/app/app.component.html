@@ -1,0 +1,15 @@
+<div class="text-center">
+	<h2>{{"Welcome to "+title | titlecase}}</h2> 
+</div> 
+<nav class="navbar navbar-default text-center">
+  
+  <p>
+	  <button type="button" class="btn btn-outline-primary"><a routerLink="add-Account" routerLinkActive="active" > Add Account</a></button>
+  
+	  <button type="button" class="btn btn-outline-primary"><a routerLink="update-Account" routerLinkActive="active" >Update Account</a></button>
+  
+	  <button type="button" class="btn btn-outline-primary"><a routerLink="delete-Account" routerLinkActive="active">Delete Account</a></button>
+  </p>
+  
+</nav> 
+<router-outlet></router-outlet>

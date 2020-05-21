@@ -1,0 +1,20 @@
+<h1 style="margin-left: 40%;">Delete Account</h1>
+<form #deleteForm = "ngForm" (ngSubmit)="deleteAccount(deleteForm)">
+    <div class="form-group">
+        <label class="form-group'level">Account Id</label>
+        <input type="text" required #accountId="ngModel" pattern="^\d+$" name="accountId" class="form-control" ngModel>
+    </div>
+
+    <div class="alert alert-danger" *ngIf="accountId.errors && (accountId.dirty || accountId.touched)">
+        <div *ngif="accountId.errors.required"> 
+            Theater Id is required
+        </div>
+    
+        <div *ngIf="accountId.errors.pattern">
+               Theater Id should be numeric
+        </div>
+    </div>
+
+    <button [disabled]="deleteForm.form.invalid" class="btn btn-primary" type="submit">Delete</button>
+</form>
+{{msg}}

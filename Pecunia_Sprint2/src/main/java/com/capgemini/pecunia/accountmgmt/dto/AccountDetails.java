@@ -3,99 +3,124 @@ package com.capgemini.pecunia.accountmgmt.dto;
 import javax.persistence.Id;
 import javax.validation.constraints.Min;
 import javax.validation.constraints.NotBlank;
+
+import com.capgemini.pecunia.accountmgmt.entities.Address;
+
 import java.util.Date;
 
 public class AccountDetails {
-    private String accountId;
-    private String accountHolderId;
-    private String accountBranchId;
-    private String accountType;
-    private String accountStatus;
-    private Double accountBalance;
-    private Double accountInterest;
-    private Date lastUpdated;
+	private String accountId;
+	private String accountHolderId;
+	private String accountBranchId;
+	private String accountType;
+	private String accountStatus;
+	private Double accountBalance;
+	private Double accountInterest;
+	private String lastUpdated;
 
-    private String customerId;
+	private String customerId;
 
-    private String customerName;
+	private String customerName;
 
-    public String getAccountId() {
-        return accountId;
-    }
+	private String customerContact;
 
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
-    }
+	private Address customerAddress;
 
-    public String getAccountHolderId() {
-        return accountHolderId;
-    }
+	public String getAccountId() {
+		return accountId;
+	}
 
-    public void setAccountHolderId(String accountHolderId) {
-        this.accountHolderId = accountHolderId;
-    }
+	public void setAccountId(String accountId) {
+		this.accountId = accountId;
+	}
 
-    public String getAccountBranchId() {
-        return accountBranchId;
-    }
+	public String getAccountHolderId() {
+		return accountHolderId;
+	}
 
-    public void setAccountBranchId(String accountBranchId) {
-        this.accountBranchId = accountBranchId;
-    }
+	public void setAccountHolderId(String accountHolderId) {
+		this.accountHolderId = accountHolderId;
+	}
 
-    public String getAccountType() {
-        return accountType;
-    }
+	public String getAccountBranchId() {
+		return accountBranchId;
+	}
 
-    public void setAccountType(String accountType) {
-        this.accountType = accountType;
-    }
+	public void setAccountBranchId(String accountBranchId) {
+		this.accountBranchId = accountBranchId;
+	}
 
-    public String getAccountStatus() {
-        return accountStatus;
-    }
+	public String getAccountType() {
+		return accountType;
+	}
 
-    public void setAccountStatus(String accountStatus) {
-        this.accountStatus = accountStatus;
-    }
+	public void setAccountType(String accountType) {
+		this.accountType = accountType;
+	}
 
-    public Double getAccountBalance() {
-        return accountBalance;
-    }
+	public String getAccountStatus() {
+		return accountStatus;
+	}
 
-    public void setAccountBalance(Double accountBalance) {
-        this.accountBalance = accountBalance;
-    }
+	public void setAccountStatus(String accountStatus) {
+		this.accountStatus = accountStatus;
+	}
 
-    public Double getAccountInterest() {
-        return accountInterest;
-    }
+	public Double getAccountBalance() {
+		return accountBalance;
+	}
 
-    public void setAccountInterest(Double accountInterest) {
-        this.accountInterest = accountInterest;
-    }
+	public void setAccountBalance(Double accountBalance) {
+		this.accountBalance = accountBalance;
+	}
 
-    public Date getLastUpdated() {
-        return lastUpdated;
-    }
+	public Double getAccountInterest() {
+		return accountInterest;
+	}
 
-    public void setLastUpdated(Date lastUpdated) {
-        this.lastUpdated = lastUpdated;
-    }
+	public void setAccountInterest(Double accountInterest) {
+		this.accountInterest = accountInterest;
+	}
 
-    public String getCustomerId() {
-        return customerId;
-    }
+	public String getLastUpdated() {
+		return lastUpdated;
+	}
 
-    public void setCustomerId(String customerId) {
-        this.customerId = customerId;
-    }
+	public void setLastUpdated(String lastUpdated) {
+		this.lastUpdated = lastUpdated;
+	}
 
-    public String getCustomerName() {
-        return customerName;
-    }
+	public String getCustomerId() {
+		return customerId;
+	}
 
-    public void setCustomerName(String customerName) {
-        this.customerName = customerName;
-    }
+	public void setCustomerId(String customerId) {
+		this.customerId = customerId;
+	}
+
+	public String getCustomerName() {
+		return customerName;
+	}
+
+	public void setCustomerName(String customerName) {
+		this.customerName = customerName;
+	}
+
+	public String getCustomerContact() {
+		return customerContact;
+	}
+
+	public void setCustomerContact(String customerContact) {
+		this.customerContact = customerContact;
+	}
+
+	public Address getCustomerAddress() {
+		return customerAddress;
+	}
+
+	public void setCustomerAddress(Address customerAddress) {
+		this.customerAddress = customerAddress;
+	}
+
+	
 }
