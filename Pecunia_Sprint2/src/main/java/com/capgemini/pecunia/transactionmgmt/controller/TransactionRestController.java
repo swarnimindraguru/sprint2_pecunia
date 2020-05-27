@@ -2,7 +2,6 @@ package com.capgemini.pecunia.transactionmgmt.controller;
 
 import java.util.Map;
 
-import com.capgemini.pecunia.accountmgmt.exceptions.ChequeBouncedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,16 +25,17 @@ public class TransactionRestController {
     @PostMapping("/credit/slip")
     public ResponseEntity<String> creditUsingSlip(@RequestBody Map<String, Object> request) {
         Transaction transaction = TransactionUtil.convertToTransactionUsingSlip(request);
-        service.creditUsingSlip(transaction);
-        return new ResponseEntity<String>("Transaction successful", HttpStatus.OK);
-
+        String transactionId=service.creditUsingSlip(transaction);
+        String msg="Transaction id="+transactionId+" is successful";
+        return new ResponseEntity<>(msg, HttpStatus.OK);
     }
     
     @PostMapping("/debit/slip")
     public ResponseEntity<String> debitUsingSlip(@RequestBody Map<String, Object> request) {
         Transaction transaction = TransactionUtil.convertToTransactionUsingSlip(request);
-        service.debitUsingSlip(transaction);
-        return new ResponseEntity<String>("Transaction successful", HttpStatus.OK);
+        String transactionId=service.debitUsingSlip(transaction);
+        String msg="Transaction id="+transactionId+" is successful";
+        return new ResponseEntity<>(msg, HttpStatus.OK);
 
     }
     
@@ -44,9 +44,9 @@ public class TransactionRestController {
     public ResponseEntity<String> creditUsingCheque(@RequestBody Map<String, Object> request) {
         Cheque cheque = TransactionUtil.convertToCheque(request);
         Transaction transaction = TransactionUtil.convertToTransactionUsingCheque(cheque);
-        service.creditUsingCheque(transaction, cheque);
-        return new ResponseEntity<>("Transaction Successful", HttpStatus.OK);
-
+        String transactionId=service.creditUsingCheque(transaction, cheque);
+        String msg="Transaction id="+transactionId+" is successful";
+        return new ResponseEntity<>( msg,HttpStatus.OK);
     }
 
 
@@ -54,9 +54,9 @@ public class TransactionRestController {
     public ResponseEntity<String> debitUsingCheque(@RequestBody Map<String, Object> request) {
         Cheque cheque = TransactionUtil.convertToCheque(request);
         Transaction transaction = TransactionUtil.convertToTransactionUsingCheque(cheque);
-        service.debitUsingCheque(transaction, cheque);
-        return new ResponseEntity<>("Transaction Successful", HttpStatus.OK);
-
+        String transactionId=service.debitUsingCheque(transaction, cheque);
+        String msg="Transaction id="+transactionId+" is successful";
+        return new ResponseEntity<>(msg, HttpStatus.OK);
     }
     
     

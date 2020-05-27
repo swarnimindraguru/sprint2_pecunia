@@ -11,12 +11,12 @@ public interface ITransactionService {
 
 	 Account getAccountById(String accNumber);
 
-	 int creditUsingSlip(Transaction transaction);
+	 String creditUsingSlip(Transaction transaction);
 
-	 int debitUsingSlip(Transaction transaction);
+	 String debitUsingSlip(Transaction transaction);
 
-	 int creditUsingCheque(Transaction transaction, Cheque cheque);
+	 String creditUsingCheque(Transaction transaction, Cheque cheque);
 
-	 int debitUsingCheque(Transaction transaction, Cheque cheque);
+	 String debitUsingCheque(Transaction transaction, Cheque cheque);
 
 }

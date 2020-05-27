@@ -14,7 +14,7 @@ public class Cheque {
     private String chequeHolderName;
     private String chequeBankName;
     private String chequeIFSC;
-    private Date IssueDate;
+    private Date issueDate;
     private String chequeStatus;
     private double amount;
 
@@ -67,11 +67,11 @@ public class Cheque {
     }
 
     public Date getIssueDate() {
-        return IssueDate;
+        return issueDate;
     }
 
     public void setIssueDate(Date issueDate) {
-        IssueDate = issueDate;
+        this.issueDate = issueDate;
     }
 
     public String getChequeStatus() {
@@ -94,7 +94,7 @@ public class Cheque {
     public String toString() {
         return "Cheque ==> ChequeId=" + chequeId + ", chequeNum=" + chequeNum + ", chequeAccountNo=" + chequeAccountNum
                 + ", chequeHolderName=" + chequeHolderName + ", chequeBankName=" + chequeBankName + ", chequeIFSC="
-                + chequeIFSC + ", chequeIssueDate=" + IssueDate + ", chequeStatus=" + chequeStatus + "]";
+                + chequeIFSC + ", chequeIssueDate=" + issueDate + ", chequeStatus=" + chequeStatus + "]";
     }
 
 }

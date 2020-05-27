@@ -8,6 +8,7 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public class DateUtil {
+    private static final String PATTERN="yyyy-MM-dd";
 
     public static Date toDate(String pattern, String dateText) {
         DateFormat format = new SimpleDateFormat(pattern);
@@ -18,6 +19,17 @@ public class DateUtil {
             throw new IncorrectDateException("incorrect date=" + dateText + " pattern=" + pattern);
         }
 
+    }
+
+    public static Date toDate(String dateText) {
+       return toDate(PATTERN,dateText);
+
+    }
+
+    public static String toString(Date date) {
+        DateFormat format = new SimpleDateFormat(PATTERN);
+        String dateText = format.format(date);
+        return dateText;
     }
 
     public static String toString(Date date, String pattern) {

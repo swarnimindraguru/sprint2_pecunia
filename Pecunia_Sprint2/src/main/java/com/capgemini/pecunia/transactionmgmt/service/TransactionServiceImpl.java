@@ -53,46 +53,40 @@ public class TransactionServiceImpl implements ITransactionService {
     }
 
     @Override
-    public int creditUsingSlip(Transaction transaction) {
+    public String creditUsingSlip(Transaction transaction) {
         String transId = AccountUtil.generateId("", 6);
         transaction.setTransId(transId);
-        if (TransactionUtil.validateCreditSlip(transaction)) {
-            Account account = getAccountById(transaction.getTransAccountId());
-            account.setAccountBalance(account.getAccountBalance() + transaction.getTransAmount());
-            transaction.setOption("credit-slip");
-            transaction.setTransType("credit");
-            accountDao.save(account);
-            transactionDao.save(transaction);
-            return 1;
-        }
-        return 0;
-
+        TransactionUtil.validateCreditSlip(transaction);
+        Account account = getAccountById(transaction.getTransAccountId());
+        account.setAccountBalance(account.getAccountBalance() + transaction.getTransAmount());
+        transaction.setOption("credit-slip");
+        transaction.setTransType("credit");
+        accountDao.save(account);
+        transactionDao.save(transaction);
+        return transId;
 
     }
 
     @Override
-	public int debitUsingSlip(Transaction transaction) {
-		String transId=AccountUtil.generateId("", 6);
-		transaction.setTransId(transId);
-		if(TransactionUtil.validateDebitSlip(transaction)) {
-			Account account=getAccountById(transaction.getTransAccountId());
-			if(transaction.getTransAmount()>account.getAccountBalance()) {
-				throw new InvalidTransactionAmountException("Transaction is not possible");}
-			account.setAccountBalance(account.getAccountBalance()-transaction.getTransAmount());
-			transaction.setOption("debit-slip");
-            transaction.setTransType("debit");
-			accountDao.save(account);
-			transactionDao.save(transaction);
-			return 1;
-		}
-		
-			return 0;
-		}
-		
-	
+    public String debitUsingSlip(Transaction transaction) {
+        String transId = AccountUtil.generateId("", 6);
+        transaction.setTransId(transId);
+        TransactionUtil.validateDebitSlip(transaction);
+        Account account = getAccountById(transaction.getTransAccountId());
+        if (transaction.getTransAmount() > account.getAccountBalance()) {
+            throw new InvalidTransactionAmountException("Transaction is not possible");
+        }
+        account.setAccountBalance(account.getAccountBalance() - transaction.getTransAmount());
+        transaction.setOption("debit-slip");
+        transaction.setTransType("debit");
+        accountDao.save(account);
+        transactionDao.save(transaction);
+        return transId;
+    }
+
 
     @Override
-    public int creditUsingCheque(Transaction transaction, Cheque cheque) {
+    public String creditUsingCheque(Transaction transaction, Cheque cheque) {
         String transId = AccountUtil.generateId("", 6);
         transaction.setTransId(transId);
         String chequeId = AccountUtil.generateId("", 6);
@@ -100,36 +94,33 @@ public class TransactionServiceImpl implements ITransactionService {
         transaction.setOption("credit-cheque");
         transaction.setTransType("credit");
         transaction.setTransDate(new Date());
-        if (TransactionUtil.validateCheque(cheque, transaction)) {
-            Account account = getAccountById(transaction.getTransAccountId());
-            account.setAccountBalance(account.getAccountBalance() + transaction.getTransAmount());
-            accountDao.save(account);
-            chequeDao.save(cheque);
-            transactionDao.save(transaction);
-            return 1;
-        }
-        return 0;
+        TransactionUtil.validateCheque(cheque, transaction);
+        Account account = getAccountById(transaction.getTransAccountId());
+        account.setAccountBalance(account.getAccountBalance() + transaction.getTransAmount());
+        accountDao.save(account);
+        chequeDao.save(cheque);
+        transactionDao.save(transaction);
+        return transId;
     }
 
     @Override
-	public int debitUsingCheque(Transaction transaction, Cheque cheque) {
-		String transId=AccountUtil.generateId("", 6);
-		transaction.setTransId(transId);
-		String chequeId=AccountUtil.generateId("", 6);
-		cheque.setChequeId(chequeId);
-		transaction.setOption("debit-cheque");
+    public String debitUsingCheque(Transaction transaction, Cheque cheque) {
+        String transId = AccountUtil.generateId("", 6);
+        transaction.setTransId(transId);
+        String chequeId = AccountUtil.generateId("", 6);
+        cheque.setChequeId(chequeId);
+        transaction.setOption("debit-cheque");
         transaction.setTransType("debit");
-		if(TransactionUtil.validateCheque(cheque, transaction)) {
-			Account account=getAccountById(transaction.getTransAccountId());
-			if(transaction.getTransAmount()>account.getAccountBalance() ) {
-		      throw new InvalidTransactionAmountException("Transaction is not possible"); }
-			account.setAccountBalance(account.getAccountBalance()-transaction.getTransAmount());
-			accountDao.save(account);
-			chequeDao.save(cheque);
-			transactionDao.save(transaction);
-			return 1;
-		}
-			return 0;
-		}
+        TransactionUtil.validateCheque(cheque, transaction);
+        Account account = getAccountById(transaction.getTransAccountId());
+        if (transaction.getTransAmount() > account.getAccountBalance()) {
+            throw new InvalidTransactionAmountException("Transaction is not possible");
+        }
+        account.setAccountBalance(account.getAccountBalance() - transaction.getTransAmount());
+        accountDao.save(account);
+        chequeDao.save(cheque);
+        transaction = transactionDao.save(transaction);
+        return transId;
+    }
 
 }

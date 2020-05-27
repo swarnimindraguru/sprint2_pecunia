@@ -4,7 +4,7 @@ import java.util.Calendar;
 import java.util.Date;
 import java.util.Map;
 
-import com.capgemini.pecunia.accountmgmt.exceptions.ChequeBouncedException;
+import com.capgemini.pecunia.accountmgmt.util.DateUtil;
 import com.capgemini.pecunia.transactionmgmt.entities.Cheque;
 import com.capgemini.pecunia.transactionmgmt.entities.Transaction;
 import com.capgemini.pecunia.transactionmgmt.exception.*;
@@ -29,10 +29,8 @@ public class TransactionUtil {
     public static Transaction convertToTransactionUsingCheque(Cheque cheque) {
         Transaction transaction = new Transaction();
         transaction.setTransAccountId(cheque.getChequeAccountNum());
-        
         transaction.setTransAmount(cheque.getAmount());
         transaction.setTransDate(new Date());
-        
         return transaction;
     }
 
@@ -48,47 +46,43 @@ public class TransactionUtil {
         cheque.setChequeBankName(chequeBankName);
         String chequeIFSC = (String) request.get("chequeIFSC");
         cheque.setChequeIFSC(chequeIFSC);
-        Date IssueDate = (Date) request.get("IssueDate");
-        cheque.setIssueDate(IssueDate);
-        double amount = (double) request.get("amount");
+        String issueDateText = (String) request.get("issueDate");
+        Date issueDate=DateUtil.toDate(issueDateText);
+        cheque.setIssueDate(issueDate);
+        String amountText =  request.get("amount").toString();
+        Double amount=Double.parseDouble(amountText);
         cheque.setAmount(amount);
-
-
         return cheque;
     }
 
 
-    public static boolean validateCreditSlip(Transaction transaction) {
+    public static void validateCreditSlip(Transaction transaction) {
 
         if (transaction.transAccountId.length() != 12
                 && !(transaction.getTransAmount() >= 100 && transaction.getTransAmount() <= 100000)) {
             throw new IncorrectSlipDetailsException("Slip details are Invalid");
-        } else {
-            return true;
         }
     }
 
-    public static boolean validateDebitSlip(Transaction transaction) {
+    public static void validateDebitSlip(Transaction transaction) {
 
         if (transaction.transAccountId.length() != 12) {
             throw new IncorrectSlipDetailsException("Slip details are Invalid");
-        } else {
-            return true;
         }
     }
 
 
-    public static boolean validateCheque(Cheque cheque, Transaction transaction) {
+    public static void validateCheque(Cheque cheque, Transaction transaction) {
         Date issuedDate = cheque.getIssueDate();
-        int issuedMonth = issuedDate.getMonth();
-        int issuedYear = issuedDate.getYear();
-        int issuedDay = issuedDate.getDate();
-        Date today = new Date();
-        Calendar cal = Calendar.getInstance();
-        cal.setTime(today);
+        Calendar issuedCalendar=Calendar.getInstance();
+        issuedCalendar.setTime(issuedDate);
+        int issuedMonth = issuedCalendar.get(Calendar.MONTH);
+        int issuedYear = issuedCalendar.get(Calendar.YEAR);
+        Calendar currentCalendar = Calendar.getInstance();
+        int currentMonth = currentCalendar.get(Calendar.MONTH);
+        int currentYear = currentCalendar.get(Calendar.YEAR);
 
-        int currentMonth = cal.get(Calendar.MONTH);
-        int currentYear = cal.get(Calendar.YEAR);
+        System.out.println("current year="+currentYear+" issued year="+issuedDate.getYear());
 
         if (currentYear - issuedYear > 1) {
             throw new ChequeBouncedException("Cheque is expired");
@@ -124,6 +118,5 @@ public class TransactionUtil {
 
 
         }
-        return true;
     }
 }
